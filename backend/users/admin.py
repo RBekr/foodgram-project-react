@@ -7,7 +7,9 @@ from .models import User, UserFollowing
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     model = User
-    list_display = ('id', 'username', 'email', 'first_name', 'last_name', 'date_joined', 'last_login')
+    list_display = ('id', 'username', 'email',
+                    'first_name', 'last_name',
+                    'date_joined', 'last_login')
     list_editable = ('first_name', 'last_name',)
     list_filter = ('username', 'email',)
     empty_value_display = settings.EMPTY_VALUE_DISPLAY

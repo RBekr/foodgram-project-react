@@ -39,13 +39,24 @@ class User(AbstractUser):
 
 class UserFollowing(models.Model):
 
-    user_id = models.ForeignKey(User, related_name='following', on_delete=models.CASCADE)
-    following_user_id = models.ForeignKey(User, related_name='followers', on_delete=models.CASCADE)
+    user_id = models.ForeignKey(
+        User,
+        related_name='following',
+        on_delete=models.CASCADE
+    )
+    following_user_id = models.ForeignKey(
+        User,
+        related_name='followers',
+        on_delete=models.CASCADE
+    )
     created = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['user_id','following_user_id'],  name='unique_followers'),
+            models.UniqueConstraint(
+                fields=['user_id', 'following_user_id'],
+                name='unique_followers'
+            ),
             models.CheckConstraint(
                 name='%(app_label)s_%(class)s_prevent_self_follow',
                 check=~models.Q(user_id=models.F('following_user_id')),

@@ -1,5 +1,7 @@
 import re
+
 from rest_framework import serializers
+
 
 def username_not_me(value):
     message = 'Имя пользователя не может быть равно {}'

@@ -1,6 +1,6 @@
-from django.db.models import Q
+from django.db.models import BooleanField, Case, Q, When
 from rest_framework import filters
-from django.db.models import Q, Case, When, BooleanField
+
 
 class RecipeFilterBackend(filters.BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
@@ -11,17 +11,13 @@ class RecipeFilterBackend(filters.BaseFilterBackend):
 
         if is_in_shopping_cart:
             queryset = queryset.filter(added_by=request.user)
-        
         if author:
             queryset = queryset.filter(author=author)
-        
         if tags:
             queryset = queryset.filter(tags__slug__in=tags).distinct()
-        
         if is_favorited:
             queryset = queryset.filter(favorited_by=request.user)
-        
-        return queryset
+        return queryset  # noqa: R504
 
 
 class IngredientFilterBackend(filters.BaseFilterBackend):
@@ -49,4 +45,4 @@ class IngredientFilterBackend(filters.BaseFilterBackend):
                 'name'
             )
 
-        return queryset
+        return queryset  # noqa: R504

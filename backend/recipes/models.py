@@ -1,5 +1,7 @@
 from datetime import datetime
+
 from django.db import models
+
 from users.models import User
 
 from .validators import measurement_unit_is_character, validate_cooking_time
@@ -40,7 +42,6 @@ class Ingredient(models.Model):
         validators=(measurement_unit_is_character, )
     )
 
-
     def __str__(self):
         return self.name
 
@@ -62,14 +63,13 @@ class Recipe(models.Model):
     cooking_time = models.IntegerField(
         verbose_name='Время приготовления (м)',
         validators=(validate_cooking_time, )
-        
     )
     pub_date = models.DateTimeField(
         'Дата публикации', default=datetime.now, blank=True
     )
     image = models.ImageField(
-        upload_to='recipes/images/', 
-        null=True,  
+        upload_to='recipes/images/',
+        null=True,
     )
     tags = models.ManyToManyField(
         Tag,

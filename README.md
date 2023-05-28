@@ -57,8 +57,8 @@ __ДОКУМЕНТАЦИЯ__
 Регистрация: 
 `POST http://localhost/signup`
 
-Получение токена: 
-`POST v1/auth/token/`
+Войти на сайт: 
+`POST http://localhost/signin`
 
 `GET http://localhost/recipes`
 

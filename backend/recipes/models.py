@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from colorfield.fields import ColorField
 from django.db import models
 
 from users.models import User
@@ -20,7 +21,8 @@ class Tag(models.Model):
         null=True
     )
 
-    color = models.CharField(
+    color = ColorField(
+        default='#FF0000',
         verbose_name='Цвет',
         max_length=7,
         null=True,

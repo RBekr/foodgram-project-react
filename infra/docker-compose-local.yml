@@ -9,7 +9,9 @@ services:
       - ./.env
     
   web:
-    image: ruslan5588/foodgram_backend:v0.2
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
     volumes:
       - ../data:/app/data
       - static_value:/app/static/
@@ -20,7 +22,9 @@ services:
       - ./.env
 
   frontend:
-    image: ruslan5588/foodgram_frontend:v0.1
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:

@@ -1,5 +1,3 @@
-from django.db.models import Sum
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from rest_framework import status
@@ -10,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
-from recipes.models import Ingredient, IngredientRecipe, Recipe, Tag
+from recipes.models import Ingredient, Recipe, Tag
 from users.models import User, UserFollowing
 
 from .filters import IngredientFilterBackend, RecipeFilterBackend
@@ -19,6 +17,7 @@ from .serializers import (FollowSerializer, FollowUsersSerializer,
                           IngredientSerializer, RecipeSerializerGet,
                           RecipeSerializerSet, SimpleRecipeSerializer,
                           TagSerializer)
+from .utils import shopping_cart_response
 
 
 class TagViewSet(ModelViewSet):
@@ -51,32 +50,10 @@ class RecipeViewSet(ModelViewSet):
     @action(
         detail=False,
         methods=['GET'],
-        permission_classes=[IsAuthenticated])
+        permission_classes=[IsAuthenticated]
+    )
     def download_shopping_cart(self, request):
-        recipes = IngredientRecipe.objects.filter(
-            recipe__in=request.user.shopping_cart.all()
-        )
-        ingredients = recipes.values(
-            'ingredient__name', 'ingredient__measurement_unit'
-        ).annotate(ingredient_count=Sum('amount'))
-        response = HttpResponse(content_type='text/plain; charset=utf-8')
-        filename = f'{request.user}_shopping_cart.txt'
-        response['Content-Disposition'] = f'attachment; filename={filename}'
-        recipes_name = ', '.join(
-            set([recipe.recipe.name for recipe in recipes])
-        )
-        response.write(f'Ингредиенты для рецептов {recipes_name}\n\n')
-        response.write('Ingredient\tCount\tUnit\n')
-
-        for ingredient in ingredients:
-            name = ingredient['ingredient__name']
-            count = ingredient['ingredient_count']
-            measurement_unit = ingredient['ingredient__measurement_unit']
-            line = f'{name} - \t{count}\t{measurement_unit}\n'
-            response.write(line)
-        response.write('\n Автор: Бекренёв Руслан; Приложение  - FOORGRAM')
-
-        return response
+        return shopping_cart_response(request)
 
 
 class APIShoppingCart(APIView):

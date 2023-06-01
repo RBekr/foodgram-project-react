@@ -4,6 +4,7 @@ from django.db import models
 
 
 class User(AbstractUser):
+    REQUIRED_FIELDS = ('email', 'first_name', 'last_name')
     email = models.EmailField(
         verbose_name='Email',
         unique=True,
@@ -13,7 +14,7 @@ class User(AbstractUser):
         verbose_name='Имя пользователя',
         unique=True,
         max_length=150,
-        validators=[UnicodeUsernameValidator()]
+        validators=(UnicodeUsernameValidator(), )
     )
     password = models.CharField(
         verbose_name='Пароль',
@@ -54,7 +55,7 @@ class UserFollowing(models.Model):
     class Meta:
         constraints = (
             models.UniqueConstraint(
-                fields=['user_id', 'following_user_id'],
+                fields=('user_id', 'following_user_id', ),
                 name='unique_followers'
             ),
             models.CheckConstraint(

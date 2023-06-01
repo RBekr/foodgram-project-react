@@ -34,14 +34,15 @@ class IngredientViewSet(ModelViewSet):
 
 
 class RecipeViewSet(ModelViewSet):
+    queryset = Recipe.objects.all()
     pagination_class = PageNumberPagination
     filter_backends = (RecipeFilterBackend, )
     permission_classes = (IsAdminOrAuthorOrReadOnly, )
 
-    def get_queryset(self):
-        return Recipe.objects.select_related(
-            'author'
-        ).prefetch_related('ingredients', 'tags')
+    # def get_queryset(self):
+    #     return Recipe.objects.select_related(
+    #         'author'
+    #     ).prefetch_related('ingredients', 'tags')
 
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:
@@ -50,6 +51,11 @@ class RecipeViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    # def get_serializer_context(self):
+    #     context = super().get_serializer_context()
+    #     context['request'] = self.request
+    #     return context
 
     @action(
         detail=False,

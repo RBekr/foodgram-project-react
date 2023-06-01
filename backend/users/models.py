@@ -4,7 +4,8 @@ from django.db import models
 
 
 class User(AbstractUser):
-    REQUIRED_FIELDS = ('email', 'first_name', 'last_name')
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ('username', 'first_name', 'last_name')
     email = models.EmailField(
         verbose_name='Email',
         unique=True,

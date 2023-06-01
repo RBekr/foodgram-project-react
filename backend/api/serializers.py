@@ -1,9 +1,9 @@
-from djoser.serializers import UserSerializer as BaseUserSerializer
+from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from recipes.models import Ingredient, IngredientRecipe, Recipe, Tag
-from users.models import User, UserFollowing
+from users.models import UserFollowing
 
 from .validators import username_not_me
 
@@ -23,10 +23,16 @@ class IngredientSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
-class UserSerializer(BaseUserSerializer):
+class CustomUserCreateSerializer(UserCreateSerializer):
+
+    def validate_username(self, value):
+        return username_not_me(value)
+
+
+class CustomUserSerializer(UserSerializer):
     is_subscribed = serializers.SerializerMethodField()
 
-    class Meta(BaseUserSerializer.Meta):
+    class Meta(UserSerializer.Meta):
         fields = ('id', 'email', 'username',
                   'password', 'first_name', 'last_name', 'is_subscribed', )
         extra_kwargs = {'password': {'write_only': True}}
@@ -46,7 +52,7 @@ class UserSerializer(BaseUserSerializer):
 
 class RecipeSerializerGet(serializers.ModelSerializer):
     tags = TagSerializer(many=True)
-    author = UserSerializer()
+    author = CustomUserSerializer()
     ingredients = serializers.SerializerMethodField()
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
@@ -60,10 +66,18 @@ class RecipeSerializerGet(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
     def get_is_favorited(self, obj):
-        return User.objects.filter(favorite_recipes=obj.id).exists()
+        request = self.context.get('request')
+        return Recipe.objects.filter(
+            pk=obj.id,
+            favorited_by=request.user
+        ).exists()
 
     def get_is_in_shopping_cart(self, obj):
-        return User.objects.filter(shopping_cart=obj.id).exists()
+        request = self.context.get('request')
+        return Recipe.objects.filter(
+            pk=obj.id,
+            added_by=request.user
+        ).exists()
 
     def get_ingredients(self, obj):
         ingredient_recipes = IngredientRecipe.objects.filter(recipe=obj)
@@ -139,12 +153,13 @@ class FollowSerializer(serializers.ModelSerializer):
         return attrs
 
 
-class FollowUsersSerializer(UserSerializer):
+class FollowUsersSerializer(CustomUserSerializer):
     recipes_count = serializers.SerializerMethodField()
     recipes = serializers.SerializerMethodField()
 
-    class Meta(UserSerializer.Meta):
-        fields = UserSerializer.Meta.fields + ('recipes', 'recipes_count')
+    class Meta(CustomUserSerializer.Meta):
+        fields = (CustomUserSerializer.Meta.fields
+                  + ('recipes', 'recipes_count'))
 
     def get_recipes_count(self, obj):
         return obj.recipes.count()

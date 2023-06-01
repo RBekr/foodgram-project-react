@@ -106,7 +106,7 @@ class IngredientRecipe(models.Model):
         related_name='recipes',
         on_delete=models.CASCADE,
     )
-    amount = models.IntegerField(
+    amount = models.FloatField(
         verbose_name='Количество',
         blank=True,
         null=True,

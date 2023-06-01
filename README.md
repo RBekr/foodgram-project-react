@@ -2,11 +2,7 @@
 
 ![FOOTGRAM workflow](https://github.com/RBekr/foodgram-project-react/actions/workflows/main.yml/badge.svg)
 
-адрес сервера - http://foodgram-gram.ddns.net/
-
-admin email - admin@admin.ru
-
-admin пароль - admin
+[FOOTGRAM](http://foodgram-gram.ddns.net/)
 
 
 «Продуктовый помощник»: сайт, на котором пользователи будут публиковать рецепты, добавлять чужие рецепты в избранное и подписываться на публикации других авторов. Сервис «Список покупок» позволит пользователям создавать список продуктов, которые нужно купить для приготовления выбранных блюд. 

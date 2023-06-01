@@ -70,6 +70,8 @@ jobs:
             script: |
               sudo docker-compose stop
               sudo docker-compose rm web
+              sudo docker-compose rm frontend
+              sudo rm -f .env
               touch .env
               echo ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }} >> .env
               echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env

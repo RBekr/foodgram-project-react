@@ -1,5 +1,6 @@
 from django.db.models import BooleanField, Case, Q, When
 from django_filters.rest_framework import FilterSet, filters
+from rest_framework.filters import BaseFilterBackend
 
 from recipes.models import Recipe, Tag
 
@@ -32,7 +33,7 @@ class RecipeFilter(FilterSet):
         return queryset
 
 
-class IngredientFilterBackend(filters.BaseFilterBackend):
+class IngredientFilterBackend(BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         search_params = request.query_params.get('name', None)
 

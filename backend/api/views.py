@@ -1,3 +1,4 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from rest_framework import status
@@ -11,7 +12,7 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from recipes.models import Ingredient, Recipe, Tag
 from users.models import User, UserFollowing
 
-from .filters import IngredientFilterBackend, RecipeFilterBackend
+from .filters import IngredientFilterBackend, RecipeFilter, RecipeFilterBackend
 from .permissitons import IsAdminOrAuthorOrReadOnly, IsAdminOrReadOnly
 from .serializers import (FollowSerializer, FollowUsersSerializer,
                           IngredientSerializer, RecipeSerializerGet,
@@ -36,13 +37,9 @@ class IngredientViewSet(ModelViewSet):
 class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.all()
     pagination_class = PageNumberPagination
-    filter_backends = (RecipeFilterBackend, )
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = RecipeFilter
     permission_classes = (IsAdminOrAuthorOrReadOnly, )
-
-    # def get_queryset(self):
-    #     return Recipe.objects.select_related(
-    #         'author'
-    #     ).prefetch_related('ingredients', 'tags')
 
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:
@@ -51,11 +48,6 @@ class RecipeViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
-
-    # def get_serializer_context(self):
-    #     context = super().get_serializer_context()
-    #     context['request'] = self.request
-    #     return context
 
     @action(
         detail=False,

@@ -1,6 +1,6 @@
 # Проект FOOTGRAM
 
-![yamdb workflow](https://github.com/RBekr/yamdb_final/actions/workflows/main.yml/badge.svg)
+![FOOTGRAM workflow](https://github.com/RBekr/foodgram-project-react/actions/workflows/main.yml/badge.svg)
 
 «Продуктовый помощник»: сайт, на котором пользователи будут публиковать рецепты, добавлять чужие рецепты в избранное и подписываться на публикации других авторов. Сервис «Список покупок» позволит пользователям создавать список продуктов, которые нужно купить для приготовления выбранных блюд. 
 

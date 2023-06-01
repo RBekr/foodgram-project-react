@@ -3,7 +3,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -13,6 +12,7 @@ from recipes.models import Ingredient, Recipe, Tag
 from users.models import User, UserFollowing
 
 from .filters import IngredientFilterBackend, RecipeFilter
+from .paginations import PageLimitPagination
 from .permissitons import IsAdminOrAuthorOrReadOnly, IsAdminOrReadOnly
 from .serializers import (FollowSerializer, FollowUsersSerializer,
                           IngredientSerializer, RecipeSerializerGet,
@@ -36,7 +36,7 @@ class IngredientViewSet(ModelViewSet):
 
 class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.all()
-    pagination_class = PageNumberPagination
+    pagination_class = PageLimitPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
     permission_classes = (IsAdminOrAuthorOrReadOnly, )
@@ -124,7 +124,7 @@ class APIFollow(APIView):
 class FollowsViewSet(ReadOnlyModelViewSet):
     permission_classes = (IsAuthenticated, )
     serializer_class = FollowUsersSerializer
-    pagination_class = PageNumberPagination
+    pagination_class = PageLimitPagination
 
     def get_queryset(self):
         return User.objects.filter(

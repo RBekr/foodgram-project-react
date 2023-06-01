@@ -11,7 +11,7 @@ services:
   web:
     image: ruslan5588/foodgram_backend:latest
     volumes:
-      - ../data:/app/data
+      - ./data:/app/data
       - static_value:/app/static/
       - media_value:/app/media/
     depends_on:

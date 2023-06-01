@@ -27,7 +27,7 @@ class Tag(models.Model):
         max_length=7,
         null=True,
         unique=True,
-        )
+    )
 
     def __str__(self):
         return self.slug
@@ -106,10 +106,10 @@ class IngredientRecipe(models.Model):
         related_name='recipes',
         on_delete=models.CASCADE,
     )
-    amount = models.IntegerField(
-        default=1,
+    amount = models.FloatField(
         verbose_name='Количество',
         blank=True,
+        null=True,
     )
 
     def __str__(self):

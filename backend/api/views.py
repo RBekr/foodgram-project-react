@@ -1,5 +1,5 @@
-from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
@@ -12,7 +12,7 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from recipes.models import Ingredient, Recipe, Tag
 from users.models import User, UserFollowing
 
-from .filters import IngredientFilterBackend, RecipeFilter, RecipeFilterBackend
+from .filters import IngredientFilterBackend, RecipeFilter
 from .permissitons import IsAdminOrAuthorOrReadOnly, IsAdminOrReadOnly
 from .serializers import (FollowSerializer, FollowUsersSerializer,
                           IngredientSerializer, RecipeSerializerGet,

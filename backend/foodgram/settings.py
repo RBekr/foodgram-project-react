@@ -18,9 +18,6 @@ ALLOWED_HOSTS = [
     *os.getenv('ALLOWED_HOSTS', '127.0.0.1').split(),
 ]
 
-
-# Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -34,7 +31,7 @@ INSTALLED_APPS = [
     'colorfield',
     'users',
     'api',
-    'recipes'
+    'recipes',
 ]
 AUTH_USER_MODEL = 'users.User'
 
@@ -91,8 +88,9 @@ DATABASES = {
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT')
+        'PORT': os.getenv('DB_PORT'),
     }
+
 }
 
 

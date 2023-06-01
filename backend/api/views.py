@@ -34,10 +34,14 @@ class IngredientViewSet(ModelViewSet):
 
 
 class RecipeViewSet(ModelViewSet):
-    queryset = Recipe.objects.all()
     pagination_class = PageNumberPagination
     filter_backends = (RecipeFilterBackend, )
     permission_classes = (IsAdminOrAuthorOrReadOnly, )
+
+    def get_queryset(self):
+        return Recipe.objects.select_related(
+            'author'
+        ).prefetch_related('ingredients', 'tags')
 
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:

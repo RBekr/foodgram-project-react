@@ -14,7 +14,7 @@ from recipes.models import IngredientRecipe
 def shopping_cart_response(request):
     recipes = IngredientRecipe.objects.filter(
         recipe__in=request.user.shopping_cart.all()
-    )
+    ).select_related('recipe', 'ingredient')
     ingredients = recipes.values(
         'ingredient__name', 'ingredient__measurement_unit'
     ).annotate(ingredient_count=Sum('amount'))
